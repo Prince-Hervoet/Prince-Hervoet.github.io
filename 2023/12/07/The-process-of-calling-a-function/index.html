@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2023-12-07 17:00:14
+          2023-12-07 17:06:45
         </span>
         
       </div>
@@ -190,7 +190,7 @@
 <ul>
 <li>movq ebp, esp 恢复 esp</li>
 <li>pop ebp 从栈中恢复保存的 ebp 的值</li>
-<li>ret 这个是复合指令，会执行跳转</li>
+<li>ret 这个是复合指令，将返回地址弹出之后会跳转到返回地址所指的地方</li>
 </ul>
 <blockquote>
 <p>有些编译器的实现可能会在标准开头之后用 sub 指令直接分配空间</p>
@@ -230,7 +230,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  以下程序在笔者的电脑上运行，只会输出：</span></span><br><span class="line"><span class="comment">  普通构造</span></span><br><span class="line"><span class="comment">  析构</span></span><br><span class="line"><span class="comment">  ---------------------------------</span></span><br><span class="line"><span class="comment">  说明现在编译器对返回值的优化已经挺智能了，只要场景符合优化条件，都不会出现拷贝</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span> &#123;</span></span><br><span class="line"> public:</span><br><span class="line">  Test() &#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;普通构造&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; &#125;;</span><br><span class="line">  Test(<span class="type">const</span> Test&amp; other) &#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;拷贝构造&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; &#125;</span><br><span class="line">  Test(<span class="type">const</span> Test&amp;&amp; other) &#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;移动构造&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; &#125;</span><br><span class="line">  ~Test() &#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;析构&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; &#125;</span><br><span class="line">  <span class="type">int</span> a = <span class="number">100</span>;</span><br><span class="line">  <span class="type">double</span> b = <span class="number">1000.8</span>;</span><br><span class="line">  <span class="type">char</span> h = <span class="number">9</span>;</span><br><span class="line">  <span class="type">double</span> y = <span class="number">123</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Test <span class="title function_">action</span><span class="params">()</span> &#123;</span><br><span class="line">  Test t;</span><br><span class="line">  t.a = <span class="number">500</span>;</span><br><span class="line">  <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">  Test res = action();</span><br><span class="line">  res.h = <span class="number">100</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>在现代 C++特性中还提供了移动语义，对于临时变量就可以使用移动而不是拷贝可以进一步提升性能</p>
+<p>在现代 C++特性中还提供了移动语义，对于临时变量可以使用移动而不是拷贝可以进一步提升性能</p>
 </blockquote>
 
       </div>
@@ -242,7 +242,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2023-12-07 17:00:14
+              2023-12-07 17:06:45
             </span>
             
           </div>
