@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2023-12-07 16:03:49
+          2023-12-07 16:23:34
         </span>
         
       </div>
@@ -218,6 +218,9 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">LargeRvTest</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> data[<span class="number">512</span>];</span><br><span class="line">&#125;LargeRvTest;</span><br><span class="line"></span><br><span class="line">LargeRvTest <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">    LargeRvTest obj; <span class="comment">// 这里有一次构造</span></span><br><span class="line">    obj.data[<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">      这里其实是将obj拷贝给temp对象，然后将temp对象的地址赋给eax寄存器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">      这里其实是将上面说的temp对象拷贝到res对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    LargeRvTest res = test();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><img src="/../images/The-process-of-calling-a-function/5.png"></p>
+<p>伪代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">LargeRvTest <span class="title function_">test</span><span class="params">(<span class="type">void</span>* args)</span> &#123;</span><br><span class="line">    LargeRvTest obj;</span><br><span class="line">    obj.data[<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">memcpy</span>(args, &amp;obj, <span class="keyword">sizeof</span>(LargeRvTest));</span><br><span class="line">    eax = args;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    LargeRvTest temp;</span><br><span class="line">    LargeRvTest res;</span><br><span class="line">    test(&amp;temp);</span><br><span class="line">    <span class="built_in">memcpy</span>(&amp;res, eax, <span class="keyword">sizeof</span>(LargeRvTest));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>所以这里传递一个大对象(在没有开启任何编译器优化的情况下)需要两次拷贝，而临时对象用完之后还需要销毁，所以额外开销还是比较大的</p>
 </blockquote>
@@ -237,7 +240,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2023-12-07 16:03:49
+              2023-12-07 16:23:34
             </span>
             
           </div>
