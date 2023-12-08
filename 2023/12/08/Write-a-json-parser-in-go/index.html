@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="Shannon Ricard" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Write a json parser in go 
+      
+      
+      |
+    
+     Shannon Ricard&#39;s blog
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Shannon Ricard</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Write a json parser in go</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2023-12-08 17:51:46
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h1 id="关于-JSON-的解析"><a href="#关于-JSON-的解析" class="headerlink" title="关于 JSON 的解析"></a>关于 JSON 的解析</h1><blockquote>
+<p>目前对于 json 结构描述最完整的文档在 <a target="_blank" rel="noopener" href="https://www.json.org/json-en.html">https://www.json.org/json-en.html</a></p>
+</blockquote>
+<p>json 是一个用于数据传输的格式化字符串，这种字符串由一些基本的键值对或者元素组成</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;sites&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;aaa&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;www.aaa.com&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bbb&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;www.bbb.com&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ccc&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;www.ccc.com&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>对于 json 的解析可以由不同的实现方式，目前主流有许多第三方库都做得很好。解析 json 的目的就是要将 json 字符串转化成目标语言中的可操作对象或者键值对表，以供程序运行使用，例如前端将用户的数据等封装成一个 json 字符串传输给后端服务器，那么服务器就需要将这个 json 字符串解析成一个具体的内存中的对象，然后将再将其按照一定规则存储到数据库</p>
+<p>解析 json 的一些难点：</p>
+<ul>
+<li>json 字符串并不一定是扁平化数据结构，它可能嵌套了很多层，并且具有 json 数组和 json 对象这两种结构，而且也可以互相嵌套</li>
+<li>json 的解析就相当于按照一定规则解析一个字符串，涉及的情况和判断分支可能比较多</li>
+<li>解析过程还需要适当判断 json 字符串是否合法，如果不合法就及时终止<blockquote>
+<p>整体就是语法解析的逻辑，实际上手的话可以有多种方式实现，可以加入状态机、AST 树等方式</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="写一个简易的版本"><a href="#写一个简易的版本" class="headerlink" title="写一个简易的版本"></a>写一个简易的版本</h1><p>上手写一个 json 语法解析器对编码的逻辑有很大提升作用，因为如果没有良好的编程逻辑和习惯，可能越写越乱，情况越来越多，导致后续无法拓展等</p>
+<h2 id="分析字符串的解析方式"><a href="#分析字符串的解析方式" class="headerlink" title="分析字符串的解析方式"></a>分析字符串的解析方式</h2><p>首先是由于我们要解析终归是一个字符串，那么就需要遍历，但是由于存在嵌套的情况，可能需要进入深层函数的调用，对于子函数来说，它操作的应该也是同一个字符串，那么就会想到需要一个所有解析函数都能看到的游标</p>
+<p>然后为了编码方便和简洁，我们可以封装一个专门操作这个字符串的结构</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> processString <span class="keyword">struct</span> &#123;</span><br><span class="line">	runes  []<span class="type">rune</span></span><br><span class="line">	index  <span class="type">int</span></span><br><span class="line">	expect <span class="type">int16</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ps *processString)</span></span> next() (<span class="type">rune</span>, <span class="type">bool</span>) &#123;</span><br><span class="line">	<span class="keyword">if</span> ps.index == <span class="built_in">len</span>(ps.runes) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>, <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">	ans := ps.runes[ps.index]</span><br><span class="line">	ps.index += <span class="number">1</span></span><br><span class="line">	<span class="keyword">return</span> ans, <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ps *processString)</span></span> back() &#123;</span><br><span class="line">	<span class="keyword">if</span> ps.index == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	ps.index -= <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ps *processString)</span></span> hasNext() <span class="type">bool</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> !(ps.index == <span class="built_in">len</span>(ps.runes))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ps *processString)</span></span> getExpect() <span class="type">int16</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> ps.expect</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ps *processString)</span></span> setExpect(value <span class="type">int16</span>) &#123;</span><br><span class="line">	ps.expect = value</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分析-json-的各种情况"><a href="#分析-json-的各种情况" class="headerlink" title="分析 json 的各种情况"></a>分析 json 的各种情况</h2><p>根据 <a target="_blank" rel="noopener" href="https://www.json.org/json-en.html">https://www.json.org/json-en.html</a> 上面的轨道图来看，json 总体上就分成 Object 和 Array<br><img src="/../images/Write-a-json-parser-in-go/1.png"><br><img src="/../images/Write-a-json-parser-in-go/2.png"></p>
+<p>Object 中可以只有空字符，也就是一个空对象，也可以有 n 个键值对，键值对之间使用逗号分隔；Array 相对来说简单，要么是空的，要么有值，然后也是逗号分隔</p>
+<p>然后值的话分成了以下这几种：<br><img src="/../images/Write-a-json-parser-in-go/3.png"></p>
+<blockquote>
+<p>详细的可以查看那个文档，里面写的很多</p>
+</blockquote>
+<p>那么根据各种值的特征，比如字符串是双引号开始，双引号结束；数字的话可以是负号开始，也可以是数字开始，只要遇到不是数字的字符就算停止；然后 true、false、null 这种简短字符串就直接硬编码解析即可。但是我们需要一种结构来标识当前解析时刻期望接收到的字符（或者说当前能接纳什么字符）</p>
+<blockquote>
+<p>这里可能有点模糊：比如刚开始解析的时候遇到什么字符是合法的？其实 { 和 [ 都是合法的，因为可以是对象，也可以是数组。那么后面可能每一步解析完之后期望下次拿到的字符是需要记录的改变的</p>
+</blockquote>
+<p>根据 json 官方的一些类型我总结成了下面这种形式，可能有遗漏，因为只是学习用的就无所谓了。这样就可以通过或运算来将多种状态合并成一个标识，节省内存也高效</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> OPENING_OBJECT <span class="type">int16</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">const</span> CLOSING_OBJECT <span class="type">int16</span> = <span class="number">1</span> &lt;&lt; <span class="number">1</span></span><br><span class="line"><span class="keyword">const</span> OPENING_ARRAY <span class="type">int16</span> = <span class="number">1</span> &lt;&lt; <span class="number">2</span></span><br><span class="line"><span class="keyword">const</span> CLOSING_ARRAY <span class="type">int16</span> = <span class="number">1</span> &lt;&lt; <span class="number">3</span></span><br><span class="line"><span class="keyword">const</span> STRING <span class="type">int16</span> = <span class="number">1</span> &lt;&lt; <span class="number">4</span></span><br><span class="line"><span class="keyword">const</span> COLON <span class="type">int16</span> = <span class="number">1</span> &lt;&lt; <span class="number">5</span></span><br><span class="line"><span class="keyword">const</span> COMMA <span class="type">int16</span> = <span class="number">1</span> &lt;&lt; <span class="number">6</span></span><br><span class="line"><span class="keyword">const</span> FLOAT_FLAG <span class="type">int16</span> = <span class="number">1</span> &lt;&lt; <span class="number">7</span></span><br><span class="line"><span class="keyword">const</span> MINUS <span class="type">int16</span> = <span class="number">1</span> &lt;&lt; <span class="number">8</span></span><br><span class="line"><span class="keyword">const</span> NUMBER <span class="type">int16</span> = <span class="number">1</span> &lt;&lt; <span class="number">9</span></span><br><span class="line"><span class="keyword">const</span> WHITE_SPACE <span class="type">int16</span> = <span class="number">1</span> &lt;&lt; <span class="number">10</span></span><br><span class="line"><span class="keyword">const</span> TRUE = <span class="number">1</span> &lt;&lt; <span class="number">11</span></span><br><span class="line"><span class="keyword">const</span> FALSE = <span class="number">1</span> &lt;&lt; <span class="number">12</span></span><br><span class="line"><span class="keyword">const</span> NULL = <span class="number">1</span> &lt;&lt; <span class="number">13</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="解析的过程"><a href="#解析的过程" class="headerlink" title="解析的过程"></a>解析的过程</h2><p>由于源码细节较多，这里只放出部分的 – 解析对象。对象中要么是空的，要么由 n 和键值对组成，那么就需要先解析到 key，对象的 key 一定是一个字符串，所以我们可以在碰到第一个双引号的时候，将后面解析的字符串内容记录成 key 值<br><img src="/../images/Write-a-json-parser-in-go/4.png"></p>
+<p>这种将各种类型的解析拆成了不同的函数，方便维护：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">parseString</span><span class="params">(ps *processString)</span></span> (<span class="type">string</span>, <span class="type">bool</span>) &#123;</span><br><span class="line">	builder := strings.Builder&#123;&#125;</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		c, ok := ps.next()</span><br><span class="line">		<span class="keyword">if</span> !ok &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="string">&quot;&quot;</span>, <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> c == <span class="string">&#x27;&quot;&#x27;</span> &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> c == <span class="string">&#x27;\\&#x27;</span> &#123;</span><br><span class="line">			builder.WriteRune(c)</span><br><span class="line">			<span class="comment">// 检查后面一个字符</span></span><br><span class="line">			c, ok = ps.next()</span><br><span class="line">			<span class="keyword">if</span> !ok || !isEscape(c) &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="string">&quot;&quot;</span>, <span class="literal">false</span></span><br><span class="line">			&#125;</span><br><span class="line">			builder.WriteRune(c)</span><br><span class="line">			<span class="keyword">if</span> c == <span class="string">&#x27;u&#x27;</span> &#123;</span><br><span class="line">				<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">4</span>; i++ &#123;</span><br><span class="line">					c, ok = ps.next()</span><br><span class="line">					<span class="keyword">if</span> !ok || !isHexDigit(c) &#123;</span><br><span class="line">						<span class="keyword">return</span> <span class="string">&quot;&quot;</span>, <span class="literal">false</span></span><br><span class="line">					&#125;</span><br><span class="line">					builder.WriteRune(c)</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			builder.WriteRune(c)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	ans := builder.String()</span><br><span class="line">	<span class="keyword">return</span> ans, <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>由于字符串中可能包含 u0000 - uFFFF 之类的东西，所以需要特殊处理一下</p>
+</blockquote>
+<p>然后在解析完 key 之后重新设置一下期望值，那么后面拿到的就是值了，如果遇到值也是一个对象的情况，只需要再调用一下自己，也就是递归<br><img src="/../images/Write-a-json-parser-in-go/5.png"></p>
+<p>这里的 FLAG 是缓存期望计算结果，加快速度，这个期望的记录大概是这样：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	FLAG_1 = OPENING_OBJECT | OPENING_ARRAY</span><br><span class="line">	FLAG_2 = STRING | WHITE_SPACE</span><br><span class="line">	FLAG_3 = COLON | WHITE_SPACE</span><br><span class="line">	FLAG_4 = COMMA | WHITE_SPACE | CLOSING_OBJECT</span><br><span class="line">	FLAG_5 = STRING | OPENING_OBJECT | OPENING_ARRAY | CLOSING_OBJECT | TRUE | FALSE | NUMBER | NULL | MINUS | WHITE_SPACE</span><br><span class="line">	FLAG_6 = STRING | NUMBER | MINUS | TRUE | FALSE | NULL | OPENING_ARRAY | OPENING_OBJECT | CLOSING_ARRAY | WHITE_SPACE</span><br><span class="line">	FLAG_7 = COMMA | WHITE_SPACE | CLOSING_ARRAY</span><br><span class="line">	FLAG_8 = STRING | NUMBER | MINUS | TRUE | FALSE | NULL | OPENING_ARRAY | OPENING_OBJECT | WHITE_SPACE</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>所以解析对象的函数就大致出来了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">parseObject</span><span class="params">(ps *processString)</span></span> (<span class="keyword">map</span>[<span class="type">string</span>]any, <span class="type">bool</span>) &#123;</span><br><span class="line">	ans := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]any)</span><br><span class="line">	ps.setExpect(FLAG_2)</span><br><span class="line">	<span class="keyword">var</span> key <span class="type">string</span> = <span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		c, ok := ps.next()</span><br><span class="line">		<span class="keyword">if</span> !ok || !isInExpect(c, ps) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">switch</span> c &#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;&quot;&#x27;</span>:</span><br><span class="line">			value, ok := parseString(ps)</span><br><span class="line">			<span class="keyword">if</span> !ok &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">false</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> key == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">				key = value</span><br><span class="line">				ps.setExpect(FLAG_3)</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				ans[key] = value</span><br><span class="line">				ps.setExpect(FLAG_4)</span><br><span class="line">				key = <span class="string">&quot;&quot;</span></span><br><span class="line">			&#125;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;-&#x27;</span>, <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;9&#x27;</span>:</span><br><span class="line">			isPos := <span class="literal">true</span></span><br><span class="line">			<span class="keyword">if</span> c == <span class="string">&#x27;-&#x27;</span> &#123;</span><br><span class="line">				isPos = <span class="literal">false</span></span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				ps.back()</span><br><span class="line">			&#125;</span><br><span class="line">			one, two, isFloat, ok := parseNumber(ps)</span><br><span class="line">			<span class="keyword">if</span> !ok || key == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">false</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> !isPos &#123;</span><br><span class="line">				one = -one</span><br><span class="line">				two = -two</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> isFloat &#123;</span><br><span class="line">				ans[key] = two</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				ans[key] = one</span><br><span class="line">			&#125;</span><br><span class="line">			ps.setExpect(FLAG_4)</span><br><span class="line">			key = <span class="string">&quot;&quot;</span></span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;t&#x27;</span>:</span><br><span class="line">			ok = parseTrue(ps)</span><br><span class="line">			<span class="keyword">if</span> !ok || key == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">false</span></span><br><span class="line">			&#125;</span><br><span class="line">			ans[key] = <span class="literal">true</span></span><br><span class="line">			ps.setExpect(FLAG_4)</span><br><span class="line">			key = <span class="string">&quot;&quot;</span></span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;f&#x27;</span>:</span><br><span class="line">			ok = parseFalse(ps)</span><br><span class="line">			<span class="keyword">if</span> !ok || key == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">false</span></span><br><span class="line">			&#125;</span><br><span class="line">			ans[key] = <span class="literal">false</span></span><br><span class="line">			ps.setExpect(FLAG_4)</span><br><span class="line">			key = <span class="string">&quot;&quot;</span></span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;n&#x27;</span>:</span><br><span class="line">			ok = parseNull(ps)</span><br><span class="line">			<span class="keyword">if</span> !ok || key == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">false</span></span><br><span class="line">			&#125;</span><br><span class="line">			ans[key] = <span class="literal">nil</span></span><br><span class="line">			ps.setExpect(FLAG_4)</span><br><span class="line">			key = <span class="string">&quot;&quot;</span></span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;&#123;&#x27;</span>:</span><br><span class="line">			value, ok := parseObject(ps)</span><br><span class="line">			<span class="keyword">if</span> !ok || key == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">false</span></span><br><span class="line">			&#125;</span><br><span class="line">			ans[key] = value</span><br><span class="line">			ps.setExpect(FLAG_4)</span><br><span class="line">			key = <span class="string">&quot;&quot;</span></span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;[&#x27;</span>:</span><br><span class="line">			value, ok := parseArray(ps)</span><br><span class="line">			<span class="keyword">if</span> !ok || key == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">false</span></span><br><span class="line">			&#125;</span><br><span class="line">			ans[key] = value</span><br><span class="line">			ps.setExpect(FLAG_4)</span><br><span class="line">			key = <span class="string">&quot;&quot;</span></span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;:&#x27;</span>:</span><br><span class="line">			ps.setExpect(FLAG_5)</span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;,&#x27;</span>:</span><br><span class="line">			ps.setExpect(FLAG_2)</span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;\t&#x27;</span>, <span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27;\r&#x27;</span>:</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;&#125;&#x27;</span>:</span><br><span class="line">			<span class="keyword">return</span> ans, <span class="literal">true</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/12/07/The-process-of-calling-a-function/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2023-12-08 17:51:46
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E-JSON-%E7%9A%84%E8%A7%A3%E6%9E%90"><span class="toc-text">关于 JSON 的解析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E7%9A%84%E7%89%88%E6%9C%AC"><span class="toc-text">写一个简易的版本</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E8%A7%A3%E6%9E%90%E6%96%B9%E5%BC%8F"><span class="toc-text">分析字符串的解析方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90-json-%E7%9A%84%E5%90%84%E7%A7%8D%E6%83%85%E5%86%B5"><span class="toc-text">分析 json 的各种情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-text">解析的过程</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/Prince-Hervoet">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2023 Shannon Ricard</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Write%20a%20json%20parser%20in%20go + '&url=' + http%3A%2F%2Fexample.com%2F2023%2F12%2F08%2FWrite-a-json-parser-in-go%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2023/12/08/Write-a-json-parser-in-go/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
