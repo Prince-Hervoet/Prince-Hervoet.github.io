@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="Shannon Ricard" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      virtual function in C++ 
+      
+      
+      |
+    
+     Shannon Ricard&#39;s blog
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Shannon Ricard</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">virtual function in C++</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2023-12-09 14:13:30
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h1 id="虚函数的概念"><a href="#虚函数的概念" class="headerlink" title="虚函数的概念"></a>虚函数的概念</h1><p>在面向对象程序设计中，C++的实现有虚函数的概念，这种函数可以被子类继承和覆盖，通常使用动态分配实现，也就是说虚函数可以给出目标函数的定义，但是具体的实现在编译器可能无法直接确定，需要运行时动态确定</p>
+<blockquote>
+<p>在 java 中，所有的方法默认都是虚方法</p>
+</blockquote>
+<p>使用方式大概如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">func1</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">func2</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">func3</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">public</span> A &#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">func1</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    A* obj = <span class="keyword">new</span> <span class="built_in">A</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="虚函数的内存结构"><a href="#虚函数的内存结构" class="headerlink" title="虚函数的内存结构"></a>虚函数的内存结构</h1><p>还是以上面的代码为例子，类 A 中有一个 func 函数被定义成了虚函数，那么编译器就会通过一张虚函数表来解决继承和覆盖的问题，保证运行时能正确调用。这个表会被存储在只读数据段中，所有实例可以共享同一张表，避免内存开销过大</p>
+<p>一张虚函数表通常是一个函数指针数组，在程序中的类只要声明了虚函数或者继承了虚函数，编译器就会为它生成虚函数表<br><img src="/../images/virtual-function-in-C++/2.png"></p>
+<p>虚函数表就相当于一个指针数组，里面存放了各个虚函数的指针，但是程序运行过程中还需要有个方式让虚函数表和实例对应起来，所以 C++中引入了一个虚函数表指针 vptr。这个 vptr 是存放在实例的内存空间中的，和其他成员挨在一起<br><img src="/../images/virtual-function-in-C++/3.png"></p>
+<p>那么将上面所讲的虚函数表和虚函数表指针关联起来就形成了一个较为完整的内存结构：<br><img src="/../images/virtual-function-in-C++/4.png"></p>
+<p>而当 B 继承了 A 之后，重新定义了 func1，其他没有重新定义，那么其他的函数指针就会指向 A 的实现：<br><img src="/../images/virtual-function-in-C++/5.png"></p>
+<p>所以总体看起来就像这样：<br><img src="/../images/virtual-function-in-C++/6.png"></p>
+<p>那么当出现以下这种代码时：</p>
+<ul>
+<li>编译器会从对象的 vptr 找到对象的虚函数表</li>
+<li>在 vtbl 中找到要调用的函数的函数指针</li>
+<li>如果没有其他特殊处理，就直接调用找到的函数<blockquote>
+<p>对于对象的 vptr 是由编译器放置的，所以编译器只需要根据偏移量就可以定位到 vptr，然后根据 vptr 找到虚函数表是一次间接寻址，再然后在虚函数表中找函数指针时是通过索引，所以开销很小</p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">(A* obj)</span> </span>&#123;</span><br><span class="line">    obj-&gt;<span class="built_in">func1</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 相当于 (*(obj-&gt;vptr[i]))()</span></span><br></pre></td></tr></table></figure>
+
+<p>补充：实际上的虚函数表并不是单纯只有函数指针，内部还有一些运行时的类型信息等</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>C++对于虚函数的实现是采用了虚函数表，也就是说当一个类中含有虚函数时，类的实例的体积就会变大，内联的几率也会变低，类信息也相应地增大（内联是指将函数体抽出来直接运行，而不是通过函数调用，但是虚函数需要动态确定，所以无法在编译时就内联某个实现）</p>
+<p>这里引用《More Effective C++》中的观点：有些人可能看到这些缺点之后觉得“我还是应该使用 C”，这样的认知其实是有问题的，因为用 C 去实现一些复杂的功能可能也需要用到这种继承方法，那还需要手动编码去实现，而大部分情况下自己实现出来的代码的性能是比不过标准实现的</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/12/08/Write-a-json-parser-in-go/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2023-12-09 14:13:30
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-text">虚函数的概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="toc-text">虚函数的内存结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/Prince-Hervoet">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2023 Shannon Ricard</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + virtual%20function%20in%20C%2B%2B + '&url=' + http%3A%2F%2Fexample.com%2F2023%2F12%2F09%2Fvirtual-function-in-C%2B%2B%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2023/12/09/virtual-function-in-C++/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
