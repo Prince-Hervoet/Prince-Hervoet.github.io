@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="Shannon Ricard" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      The basic construction of capacitors 
+      
+      
+      |
+    
+     Shannon Ricard&#39;s blog
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Shannon Ricard</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">The basic construction of capacitors</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2023-12-26 23:55:06
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h1 id="电容的简介"><a href="#电容的简介" class="headerlink" title="电容的简介"></a>电容的简介</h1><p>电容是电容器的简称，是电子设备中大量使用的电子元件之一。电容器是存储电量和电能的元件，一个导体被另一个导体所包围，或者由一个导体发出的电场线全部终止于另一个导体的导体系，称为电容器。</p>
+<p>也有定义为：任何两个彼此绝缘并且相隔很近的导体都构成一个电容器</p>
+<p><img src="/../images/The-basic-construction-of-capacitors/1.png"></p>
+<h1 id="电容的常见作用"><a href="#电容的常见作用" class="headerlink" title="电容的常见作用"></a>电容的常见作用</h1><ul>
+<li>滤波：这是电容最重要的用途之一，所谓滤波就是当输入电压比电容两端电压大时，电荷进入电容，也就是充电，导致电容电压升高；当输入电压小于电容两端电压，电压放电，电压下降。而充电和放电都是需要时间的，所以就起到一个稳定的作用</li>
+<li>隔断直流：用于去除信号中的直流分量</li>
+<li>旁路电容：由于电容在高频时阻抗小，所以可以将电容和某些元件并联，使得该元件在高频时短路</li>
+<li>存储能量：将能量存储起来</li>
+</ul>
+<h1 id="电容的基本结构"><a href="#电容的基本结构" class="headerlink" title="电容的基本结构"></a>电容的基本结构</h1><p>电容器的基本结构是间隔对置的两个金属板。施加直流电压到两个电极上，电子瞬间聚集到其中一个电极上，该电极带负电，另一个电极则处于电子不足的状态，带正电。该状态在撤去直流电压之后依然存在，所以在两个电极之间存储了电荷 Q，在电极间插入电介质后，通过电介质的极化，存储的电荷增加，表示电容存储多少电荷的指标称为电容量 C<br><img src="/../images/The-basic-construction-of-capacitors/2.png"></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/12/23/lvalue-and-rvalue/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2023-12-26 23:55:06
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%B5%E5%AE%B9%E7%9A%84%E7%AE%80%E4%BB%8B"><span class="toc-text">电容的简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%B5%E5%AE%B9%E7%9A%84%E5%B8%B8%E8%A7%81%E4%BD%9C%E7%94%A8"><span class="toc-text">电容的常见作用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%B5%E5%AE%B9%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="toc-text">电容的基本结构</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/Prince-Hervoet">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2023 Shannon Ricard</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + The%20basic%20construction%20of%20capacitors + '&url=' + http%3A%2F%2Fexample.com%2F2023%2F12%2F26%2FThe-basic-construction-of-capacitors%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2023/12/26/The-basic-construction-of-capacitors/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

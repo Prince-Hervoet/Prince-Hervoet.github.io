@@ -143,7 +143,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2023-12-23 22:44:35
+          2023-12-27 00:57:17
         </span>
         
       </div>
@@ -160,6 +160,15 @@
 <blockquote>
 <p>拷贝调用的是拷贝构造，移动调用的是移动构造。对于含指针的对象拷贝构造一般进行深拷贝，在一些场景下可能开销较大，所以可能选择用移动构造进行浅拷贝</p>
 </blockquote>
+<h1 id="C-11-右值引用"><a href="#C-11-右值引用" class="headerlink" title="C++11 右值引用"></a>C++11 右值引用</h1><p>为了更好地理解左右值，可以稍微拓展一下 C++11 引入的右值引用。所谓右值引用就是可以引用右值的引用（原先的引用则是左值引用）：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>&amp; a = <span class="number">100</span>; <span class="comment">// 这是错误的</span></span><br><span class="line"><span class="type">int</span>&amp;&amp; b = <span class="number">100</span>; <span class="comment">// 这是正确的</span></span><br><span class="line"><span class="type">int</span> c = <span class="number">9</span>;</span><br><span class="line"><span class="type">int</span>&amp; d = c; <span class="comment">// 这是正确的</span></span><br></pre></td></tr></table></figure>
+
+<p>从编译后的汇编码理解，其实右值引用和左值引用是一样的，编译器会给右值引用引用的右值创建出一个内存空间，也就是延长了生命周期。但是单纯这样看，看不出来右值引用的实际用途。。其实它是为了减少拷贝提升性能，例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BigClass</span>&#123;</span><br><span class="line">    <span class="comment">// 带有指针成员变量</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">(BigClass&amp;&amp; a)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 做一些事情</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">test</span>(std::<span class="built_in">move</span>(<span class="built_in">BigClass</span>()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>上面代码中 BigClass&amp;&amp;就是一个右值引用，它是为了编译器能识别调用 BigClass 的移动构造，避免深拷贝消耗性能。因为临时变量是即将要死亡的值，没必要将它拥有的资源深拷贝一份</p>
+</blockquote>
 
       </div>
       
@@ -175,11 +184,16 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2023-12-23 22:44:35
+              2023-12-27 00:57:17
             </span>
             
           </div>
           <div class="post-foot-prev">
+            
+              <a href="/2023/12/26/The-basic-construction-of-capacitors/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
             
           </div>
         </div>
@@ -193,7 +207,7 @@
     <div class="title">Contents</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%B7%A6%E5%80%BC-%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%B3%E5%80%BC"><span class="toc-text">什么是左值 什么是右值</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#C-%E5%AF%B9%E4%BA%8E%E5%B7%A6%E5%8F%B3%E5%80%BC%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">C++对于左右值的设计</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%B7%A6%E5%80%BC-%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%B3%E5%80%BC"><span class="toc-text">什么是左值 什么是右值</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#C-%E5%AF%B9%E4%BA%8E%E5%B7%A6%E5%8F%B3%E5%80%BC%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">C++对于左右值的设计</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#C-11-%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8"><span class="toc-text">C++11 右值引用</span></a></li></ol>
       
     </div>
   </div>
