@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="Shannon Ricard" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      lvalue and rvalue 
+      
+      
+      |
+    
+     Shannon Ricard&#39;s blog
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Shannon Ricard</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">lvalue and rvalue</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2023-12-23 22:44:35
+        </span>
+        
+      </div>
+      <div class="markdown-body">
+        <h1 id="什么是左值-什么是右值"><a href="#什么是左值-什么是右值" class="headerlink" title="什么是左值 什么是右值"></a>什么是左值 什么是右值</h1><p>在 C 和 C++语言中存在着左值 lvalue 和右值 rvalue 的概念，最通俗的理解就是赋值表达式等号左边的就是左值，右边的就是右值，但其实这样的理解是不准确的</p>
+<p>比较官方的解释：左值是具有确定的、可以被获得的内存地址，而右值则是无法取地址的值。例如 C 语言的表达式(1 + 4)，在运算的过程中系统会生成一个 5 的值，但是这个值并没有显式地在计算机中存储，所以它是一个右值，而如果声明了一个变量 a 并将 5 赋值给它，a 就是一个左值</p>
+<blockquote>
+<p>对于以上的说法，看一些简单的汇编可能更好理解：int a &#x3D; 1; –&gt; mov DWORD PTR [rbp-4], 1 这里的 1 其实是一个立即数，它并没有一个确定的内存地址，所以它是右值</p>
+</blockquote>
+<h1 id="C-对于左右值的设计"><a href="#C-对于左右值的设计" class="headerlink" title="C++对于左右值的设计"></a>C++对于左右值的设计</h1><p>在 C 语言中对于左右值得运用可能并没有很在意，因为它确实就是有内存地址和无内存地址的区别，但是在 C++中由于面向对象等的出现对左右值又进行一定拓展</p>
+<p>C++11 之后将上述的左右值定义为值类别 value category，值类别中包含了三个基本分类：泛左值 glvalue、右值 rvalue、将亡值 xvalue<br><img src="/../images/lvalue-and-rvalue/1.png"></p>
+<p>为什么要分多一个将亡值？这是因为 C++11 后引入了移动语义和右值引用的概念，用于优化对象的拷贝问题。对于临时对象可以使用移动来搬运而不是调用拷贝构造复制一份，提高程序性能，而正因为需要区分是临时量还是一般的左值，才弄出了更具体的值类别</p>
+<p>而对于右值引用，从汇编层面上看和左值引用是没有区别的，其实是编译器层面的语法，编译器需要开发者确定用值类别，进而确定是使用移动还是拷贝</p>
+<blockquote>
+<p>拷贝调用的是拷贝构造，移动调用的是移动构造。对于含指针的对象拷贝构造一般进行深拷贝，在一些场景下可能开销较大，所以可能选择用移动构造进行浅拷贝</p>
+</blockquote>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/12/09/virtual-function-in-C++/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2023-12-23 22:44:35
+            </span>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%B7%A6%E5%80%BC-%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%B3%E5%80%BC"><span class="toc-text">什么是左值 什么是右值</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#C-%E5%AF%B9%E4%BA%8E%E5%B7%A6%E5%8F%B3%E5%80%BC%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">C++对于左右值的设计</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/Prince-Hervoet">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2023 Shannon Ricard</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + lvalue%20and%20rvalue + '&url=' + http%3A%2F%2Fexample.com%2F2023%2F12%2F23%2Flvalue-and-rvalue%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2023/12/23/lvalue-and-rvalue/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
